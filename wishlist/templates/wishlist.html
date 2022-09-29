@@ -5,7 +5,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
 	<div class="container-fluid">
 		<a class="navbar-brand" href="{% url 'wishlist:show_wishlist' %}">Wishlist</a>
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+				aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -13,23 +14,25 @@
 				
 				<a class="nav-link" href="{% url 'wishlist:logout' %}">Logout</a>
 				
-				<div class="navbar-nav ms-auto">
+				<div class="navbar-nav ms-auto align-text-top">
 					<a class="nav-link" href="{% url 'wishlist:show_wishlist' %}">Welcome, {{ user.username }}</a>
 				
+				</div>
 			</div>
 		</div>
-	</div>
 </nav>
 
 <h5>Nama: </h5>
 <b>{{nama}}</b>
 
-<table class="table table-sm" >
+<table class="table table-sm table-responsive">
+	<thead class = "table-dark">
 	<tr>
 		<th>Nama Barang</th>
 		<th>Harga Barang</th>
 		<th>Deskripsi</th>
 	</tr>
+	</thead>
 	{% comment %} Tambahkan data di bawah baris ini {% endcomment %}
 	
 	{% for barang in list_barang %}
