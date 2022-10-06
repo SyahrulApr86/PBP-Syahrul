@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<title>Wishlist</title>
+{% endblock meta %}
+
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="{% url 'wishlist:show_wishlist' %}">Wishlist</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+				aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				
+				<a class="nav-link" href="{% url 'wishlist:logout' %}">Logout</a>
+				
+				<div class="navbar-nav ms-auto align-text-top">
+					<a class="nav-link" href="{% url 'wishlist:show_wishlist' %}">Welcome, {{ user.username }}</a>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>
+
+<h5>Nama: </h5>
+<b>{{nama}}</b>
+
+
+<div>
+	<form method="POST" action="" id="formtable" class="d-flex justify-content-center p-2  ">
+		<div class="">
+			{% csrf_token %}
+			<table>
+				<tr>
+					<td>Nama Barang: </td>
+					<td><input type="text" name="items" placeholder="Nama Barang" class="form-control" id="items_name"></td>
+				</tr>
+				<tr>
+					<td>Harga Barang: </td>
+					<td><input type="text" name="items_price" placeholder="Harga Barang" class="form-control" id="items_pr"></td>
+				</tr>
+				<tr>
+					<td>Deskripsi: </td>
+					<td><input type="text" name="items_desc" placeholder="Deskripsi" class="form-control" id="items_descrip"></td>
+				</tr>
+			
+			
+			</table>
+			<button onclick="clickCounter()" type="submit" id="masuk" class="">Tambah</button>
+		</div>
+	
+	
+	</form>
+</div>
+
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+
+<button><a href="{% url 'wishlist:logout' %}">Logout</a></button>
+
+<script>
+	
+	let tab;
+	function loadData() {
+		$.get("{% url 'wishlist:show_json' %}", function (data) {
+			tab = `<tr>
+            <th>Nama Barang</th>
+            <th>Harga Barang</th>
+            <th>Deskripsi</th>
+          </tr>`;
+			
+			for (let item of data) {
+				tab += `<tr>
+        <td>${item.fields.nama_barang} </td>
+        <td>${item.fields.harga_barang}</td>
+        <td>${item.fields.deskripsi}</td>
+        </tr>`;}
+			
+			document.getElementById("tbl").innerHTML = tab;
+		});
+	}
+	
+	$(document).ready(function () {
+		loadData();
+	});
+	
+	$(document).on("submit", "#formtable", function (e) {
+		e.preventDefault();
+		$.ajax({
+			type: "POST",
+			url: "{% url 'wishlist:tbl-form' %}",
+			data: {
+				nama_barang: $("#items_name").val(),
+				harga_barang: $("#items_pr").val(),
+				deskripsi: $("#items_descrip").val(),
+				csrfmiddlewaretoken: "{{ csrf_token }}",
+			},
+			dataType: "json",
+			success: function () {
+				loadData();
+			},
+		});
+	});
+	
+	function clickCounter() {
+		if (localStorage.clickcount) {
+			localStorage.clickcount = Number(localStorage.clickcount)+1;
+		} else {
+			localStorage.clickcount = 1;
+		}
+	}
+</script>
+
+{% endblock content %}
